@@ -1,3 +1,144 @@
-<Solution>
-  <Project Path="signup/signup.csproj" />
-</Solution>
+using System;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        const int MAX_USERS = 10;
+        string[] usernames = new string[MAX_USERS];
+        string[] passwords = new string[MAX_USERS];
+        int userCount = 0;
+
+        int choice;
+        bool isLoggedIn = false;
+
+        TopHeader();
+        do
+        {
+            MainMenu();
+            Console.Write("Enter your choice: ");
+
+            while (!int.TryParse(Console.ReadLine(), out choice))
+            {
+                Console.Write("Invalid input. Enter number only: ");
+            }
+
+            if (choice == 1)
+            {
+                userCount = SignUp(usernames, passwords, userCount);
+            }
+            else if (choice == 2)
+            {
+                isLoggedIn = SignIn(usernames, passwords, userCount);
+            }
+            else if (choice == 3)
+            {
+                if (isLoggedIn)
+                {
+                    SignOut();
+                    isLoggedIn = false;
+                }
+                else
+                {
+                    Console.WriteLine("You are not signed in.");
+                }
+            }
+            else if (choice == 4)
+            {
+                Console.WriteLine("Program exited safely.");
+            }
+            else
+            {
+                Console.WriteLine("Invalid menu option.");
+            }
+
+        } while (choice != 4);
+    }
+
+    // Top Header
+    static void TopHeader()
+    {
+        Console.WriteLine("==============================");
+        Console.WriteLine("     STYLESPARK STORE");
+        Console.WriteLine("   Console Based Program");
+        Console.WriteLine("==============================");
+    }
+
+    // Main Menu
+    static void MainMenu()
+    {
+        Console.WriteLine();
+        Console.WriteLine("--- MAIN MENU ---");
+        Console.WriteLine("1. Sign Up");
+        Console.WriteLine("2. Sign In");
+        Console.WriteLine("3. Sign Out");
+        Console.WriteLine("4. Exit");
+    }
+
+    // Sign Up
+    static int SignUp(string[] usernames, string[] passwords, int userCount)
+    {
+        if (userCount >= 10)
+        {
+            Console.WriteLine("User limit reached.");
+            return userCount;
+        }
+
+        Console.Write("Enter username: ");
+        string newUsername = Console.ReadLine();
+
+        for (int i = 0; i < userCount; i++)
+        {
+            if (usernames[i] == newUsername)
+            {
+                Console.WriteLine("Username already exists.");
+                return userCount;
+            }
+        }
+
+        Console.Write("Enter password: ");
+        string newPassword = Console.ReadLine();
+
+        usernames[userCount] = newUsername;
+        passwords[userCount] = newPassword;
+        userCount = userCount + 1;
+
+        Console.WriteLine("Sign up successful.");
+        return userCount;
+    }
+
+    // Sign In
+    static bool SignIn(string[] usernames, string[] passwords, int userCount)
+    {
+        if (userCount == 0)
+        {
+            Console.WriteLine("No users registered.");
+            return false;
+        }
+
+        Console.Write("Enter username: ");
+        string inputUsername = Console.ReadLine();
+
+        Console.Write("Enter password: ");
+        string inputPassword = Console.ReadLine();
+
+        for (int i = 0; i < userCount; i++)
+        {
+            if (usernames[i] == inputUsername &&
+                passwords[i] == inputPassword)
+            {
+                Console.WriteLine("Login successful.");
+                return true;
+            }
+        }
+
+        Console.WriteLine("Invalid username or password.");
+        return false;
+    }
+
+    // Sign Out
+    static void SignOut()
+    {
+        Console.WriteLine("Signed out successfully.");
+    }
+}
